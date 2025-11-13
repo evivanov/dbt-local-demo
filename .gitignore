@@ -1,0 +1,28 @@
+# Python stuff (if any)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.swp
+
+# dbt artifacts
+/dbt/my_project/target/
+/dbt/my_project/dbt_modules/
+/dbt/my_project/.dbt/
+
+# logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker (optional, if you generate volumes or temp files)
+/docker/tmp/
+.vscode/settings.json
+dbt/my_project/package-lock.yml
+dbt/my_project/.user.yml
+
+dbt/my_project/target/
+dbt/my_project/dbt_packages/
+dbt/my_project/logs/

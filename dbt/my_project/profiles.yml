@@ -1,0 +1,12 @@
+my_project:
+  outputs:
+    dev:
+      dbname: dbt_demo
+      host: postgres
+      pass: dbt
+      port: 5432
+      schema: analytics
+      threads: 1
+      type: postgres
+      user: dbt
+  target: dev

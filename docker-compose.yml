@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:18
+    container_name: pg_dbt
+    environment:
+      POSTGRES_USER: dbt
+      POSTGRES_PASSWORD: dbt
+      POSTGRES_DB: dbt_demo
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./dbt/my_project/data:/data
+
+  dbt:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile
+    container_name: dbt
+    depends_on:
+      - postgres
+    environment:
+      DBT_PROFILES_DIR: /dbt/my_project
+    volumes:
+      - ./dbt/my_project:/dbt/my_project
+    working_dir: /dbt/my_project
+    ports:
+      - "8080:8080"
+    command: ["/dbt/my_project/start_dbt_docs.sh"]  # runs in foreground
+
+  loader:
+    build:
+      context: ./loader
+      dockerfile: Dockerfile
+    container_name: csv_loader
+    depends_on:
+      - postgres
+    volumes:
+      - ./data:/data       # CSV files go here
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGUSER: dbt
+      PGPASSWORD: dbt
+      PGDATABASE: dbt_demo
+    command: ["python", "/app/load.py"]

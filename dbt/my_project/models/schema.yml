@@ -1,0 +1,47 @@
+version: 2
+
+models:
+  - name: sales_summary
+    description: "Aggregated sales summary by product"
+    columns:
+      - name: product
+        description: "Product name"
+        tests:
+          - not_null:
+              name: "product_not_null"
+              description: "Ensure product_not_null"
+          - unique:
+              name: "product_unique"
+              description: "Ensure the products are unique"
+      - name: total_sales
+        description: "Total revenue for this product (quantity * price)"
+        tests:
+          - not_null:
+              name: "total_sales_not_null"
+              description: "Ensure total_sales is never NULL"
+              arguments:
+                column_name: total_sales
+          - dbt_utils.expression_is_true:
+              name: "total_sales_non_negative"
+              description: "Check that total_sales is not negative"
+              arguments:
+                expression: ">= 0"
+      - name: transactions
+        description: "Total units sold for this product"
+        tests:
+          - not_null:
+              name: "total_transactions_not_null"
+              description: "Ensure total_transactions is never NULL"
+          - dbt_utils.expression_is_true:
+              name: "total_transactions_non_negative"
+              description: "Check that total_transactions is not negative"
+              arguments:
+                expression: ">= 0"
+
+  - name: avg_prices
+    description: "Average price by product"
+    columns:
+      - name: product
+        description: "Product name"
+      - name: avg_price
+        description: "Average price"
